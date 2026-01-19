@@ -1,0 +1,37 @@
+[
+  {
+    "name": "scales",
+    "tier_level": 0,
+    "current_points": 0,
+    "shard_count": 1,
+    "shard_colors": [
+      "red"
+    ]
+  },
+  {
+    "name": "dirk",
+    "tier_level": 0,
+    "current_points": 2,
+    "shard_count": 2,
+    "shard_colors": [
+      "blue",
+      "red"
+    ]
+  },
+  {
+    "name": "krivskan",
+    "tier_level": 0,
+    "current_points": 0,
+    "shard_count": 0,
+    "shard_colors": []
+  },
+  {
+    "name": "thom",
+    "tier_level": 0,
+    "current_points": 0,
+    "shard_count": 1,
+    "shard_colors": [
+      "green"
+    ]
+  }
+]
