@@ -19,6 +19,7 @@ their level.
 
 ========FUTURE UPDATES========
 1) Refactoring the code into modules
+    - Actioning first
 2) File OS tracking, easier usage via os module
 3) Additional Menu options
 4) Character creation/addition/removal support
