@@ -50,68 +50,93 @@ class Character:
         )
 
 
+    #RUNNING METHODS
     #======================================================================#
-
+    def calc_tier(self):
+        if self.current_points < 0:
+            self.current_points = 0
+        self.tier_level = self.current_points//100      
 
     # MENU ACTIONS
     #======================================================================#
-    def calc_tier(self):
-        tier = self.current_points//100
-        self.tier_level = tier      
-
-    def cast_a_spell(self):
+    def cast_a_spell(self): #0
         cast_incr = 2
         print("Casting a spell...")
         time.sleep(1.0)
         self.current_points += cast_incr
         self.calc_tier()
         print(f"{self.player_name.capitalize()}'s corruption points increased by {cast_incr}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
-        savestate(players, "file_rw_practice/datafile.txt")
+        savestate(players, filename)
 
-    def day_passed(self):
+    def day_passed(self): #1
         day_incr = 10
         print("Taking a long rest...")
         time.sleep(1.0)
         self.current_points += day_incr
         self.calc_tier()
         print(f"{self.player_name.capitalize()}'s corruption points increased by {day_incr}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
-        savestate(players, "file_rw_practice/datafile.txt")
+        savestate(players, filename)
 
-    def char_downed(self):
+    def char_downed(self): #2
         down_incr = 20
         print("Knocking character out...")
         time.sleep(1.0)
         self.current_points += down_incr
         self.calc_tier()
         print(f"{self.player_name.capitalize()}'s corruption points increased by {down_incr}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
-        savestate(players, "file_rw_practice/datafile.txt")
+        savestate(players, filename)
     
-    def detune_fail(self):
+    def detune_fail(self): #3
         fail_incr = 30
         print("Failing to break the curse...")
         time.sleep(1.0)
         self.current_points += fail_incr
         self.calc_tier()
         print(f"{self.player_name.capitalize()}'s corruption points increased by {fail_incr}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
-        savestate(players, "file_rw_practice/datafile.txt")
+        savestate(players, filename)
 
-    def detune_succ(self):
+    def detune_succ(self): #4
         succ_decr = -15
         print("Beating back the curse with willpower...")
         time.sleep(1.0)
         self.current_points += succ_decr
         self.calc_tier()
         print(f"{self.player_name.capitalize()}'s corruption points decreased by {abs(succ_decr)}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
-        savestate(players, "file_rw_practice/datafile.txt")
+        savestate(players, filename)
 
-    def recov_magic(self):
+    def recov_magic(self): #5
         rec_decr = -10
         print("Removing a fraction of the curse...")
         time.sleep(1.0)
         self.current_points += rec_decr
         self.calc_tier()
         print(f"{self.player_name.capitalize()}'s corruption points decreased by {abs(rec_decr)}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
-        savestate(players, "file_rw_practice/datafile.txt")
+        savestate(players, filename)
+
+    def reset_char(self): #11
+        while True:
+            choice=input(f"Are you sure you want to reset all values for {self.player_name}? y/n: ")
+            if choice.lower()=='n':
+                print("Aborting character stat clear, no changes made.\n")
+                break
+            elif choice.lower()=='y':
+                print("Purging the curse entirely...")
+                time.sleep(1.0)
+                self.current_points=0
+                self.calc_tier()
+                self.shard_count=0
+                self.shard_colors=[]
+                savestate(players, filename)
+                print(f"{self.player_name.capitalize()}'s save data has been cleared and set to 0. No shards are in their inventory, and all stats are cleared.\n")
+                break
+            else:
+                print("Bad input. Please try again. ")
+                continue
+
+#6 is currently Character Select
+#7 is currently Show All Characters
+#6 should be Failed Second Attunement, move 6 and 7 to 7 and 8
+#Set 9 to Select Shard
 
 #======================================================================#
 #File Manager Functions, loadfile populates 'players' list with Character() class player objects
@@ -194,19 +219,19 @@ def menu_framework(players):
             "act_name": "Show All Stat Blocks" 
         },{
             "act_num" : 8, 
-            "act_name": "Select Active Shard"
+            "act_name": "placeholder - Select Active Shard"
         },{
             "act_num" : 9, 
-            "act_name": "Change Day Count"
+            "act_name": "placeholder - Change Day Count"
         },{
             "act_num" : 10, 
-            "act_name": "Change Shard Count"
+            "act_name": "placeholder - Change Shard Count"
         },{
             "act_num" : 11, 
-            "act_name": "Clear XP"
+            "act_name": "Clear XP for Selected Character"
         },{
             "act_num" : 12, 
-            "act_name": "Show Thresholds"
+            "act_name": "placeholder - Show Thresholds"
         },{
             "act_num" : 13, 
             "act_name": "Exit"
@@ -242,7 +267,7 @@ def menu_framework(players):
                 print("\nOut of range: choose one of the listed numbers.")
                 print_actions()
 
-    def take_action(action):
+    def take_action(action): #Selective actions that load the requested Character object and run Character methods based on the selected menu option
         nonlocal selected_char
         action_name = action["act_name"]
         action_num = action["act_num"]
@@ -302,6 +327,9 @@ def menu_framework(players):
         elif action_num == 6: #Changes Active Character
             print(f"Selected: {action_name}\n")
             selected_char = character_select(players)
+            if selected_char != None:
+                selected_char.calc_tier() #Set to autocalc tier early in case changes were made manually, to avoid confusion
+            savestate(players, filename) #saving early autocalc on player load, to ensure stats are set accurately in the file on launch
             clear_screen()
             return action_num
 
@@ -325,14 +353,22 @@ def menu_framework(players):
             print(action_name)
             print("Placeholder, feature not yet implemented.")
             return action_num 
+
+        #Implemented
         elif action_num == 11:
-            print(action_name)
-            print("Placeholder, feature not yet implemented.")
+            print(f"Selected: {action_name}\n")
+            if selected_char != None:
+                selected_char.reset_char()
+            else:
+                print("No character selected! No changes made.\n")
             return action_num
+        
         elif action_num == 12:
             print(action_name)
             print("Placeholder, feature not yet implemented.")
             return action_num  
+
+        #Exit key, no additions needed
         elif action_num == 13:
             print(action_name)
             return action_num
@@ -370,7 +406,7 @@ menu_framework(players)
 # #players["Krivskan".lower()].retrieve_stat() #Turn into a method later
 
 #selected_char = character_select(players)
-i#print(selected_char)
+#print(selected_char)
 #selected_char.show_all()
 
 # selected_char.current_points += 1
