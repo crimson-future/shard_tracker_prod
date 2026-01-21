@@ -13,10 +13,7 @@
     "tier_level": 0,
     "current_points": 0,
     "shard_count": 0,
-    "shard_colors": [
-      "blue",
-      "red"
-    ]
+    "shard_colors": []
   },
   {
     "name": "krivskan",
