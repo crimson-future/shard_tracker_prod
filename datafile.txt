@@ -4,9 +4,7 @@
     "tier_level": 0,
     "current_points": 0,
     "shard_count": 0,
-    "shard_colors": [
-      "red"
-    ]
+    "shard_colors": []
   },
   {
     "name": "dirk",
@@ -27,8 +25,6 @@
     "tier_level": 0,
     "current_points": 0,
     "shard_count": 0,
-    "shard_colors": [
-      "green"
-    ]
+    "shard_colors": []
   }
 ]

@@ -57,6 +57,10 @@ class Character:
             self.current_points = 0
         self.tier_level = self.current_points//100      
 
+    def calc_shardlen(self):
+        self.shard_count=len(self.shard_colors)
+
+
     # MENU ACTIONS
     #======================================================================#
     def cast_a_spell(self): #0
@@ -116,7 +120,8 @@ class Character:
     
     def edit_shards(self): # 8
         while True:
-            print(f"Current shard list for {self.player_name}: {self.shard_colors}\n")
+            self.calc_shardlen()
+            print(f"Current shard list for {self.player_name.capitalize()}: {self.shard_colors}\n")
             choice = input("Welcome to the shard editor. What would you like to do? Enter a number to select:\n0: Go back without changing anything\n1: Add a shard to the character\n2: Remove a shard from the character\n3: Change the character's shard\n\n Selection: ")
             if choice == "0": 
                 clear_screen()
@@ -143,7 +148,6 @@ class Character:
                                 clear_screen()
                                 print(f"\n Shard added.\n")
                                 savestate(players, filename)
-
                                 break
                         break
                     #Remove from list
@@ -435,6 +439,7 @@ def menu_framework(players):
             selected_char = character_select(players)
             if selected_char != None:
                 selected_char.calc_tier() #Set to autocalc tier early in case changes were made manually, to avoid confusion
+                selected_char.calc_shardlen() #Same thing, just for shards list
             savestate(players, filename) #saving early autocalc on player load, to ensure stats are set accurately in the file on launch
             clear_screen()
             return action_num
