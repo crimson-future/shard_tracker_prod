@@ -6,6 +6,10 @@ from math_constants import INCREASE_CASTING, INCREASE_DAYPASS, INCREASE_KNOCKED,
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
 
+def main():
+    filename = "datafile.txt"
+    players = loadfile(filename)
+    menu_framework(players, filename)
 
 #======================================================================#
 class Character:
@@ -64,7 +68,7 @@ class Character:
 
     # MENU ACTIONS
     #======================================================================#
-    def cast_a_spell(self): #0
+    def cast_a_spell(self, players, filename): #0
         print("Casting a spell...")
         time.sleep(1.0)
         self.current_points += INCREASE_CASTING
@@ -72,7 +76,7 @@ class Character:
         print(f"{self.player_name.capitalize()}'s corruption points increased by {INCREASE_CASTING}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
         savestate(players, filename)
 
-    def day_passed(self): #1
+    def day_passed(self, players, filename): #1
         print("Taking a long rest...")
         time.sleep(1.0)
         self.current_points += INCREASE_DAYPASS
@@ -80,7 +84,7 @@ class Character:
         print(f"{self.player_name.capitalize()}'s corruption points increased by {INCREASE_DAYPASS}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
         savestate(players, filename)
 
-    def char_downed(self): #2
+    def char_downed(self, players, filename): #2
         print("Knocking character out...")
         time.sleep(1.0)
         self.current_points += INCREASE_KNOCKED
@@ -88,7 +92,7 @@ class Character:
         print(f"{self.player_name.capitalize()}'s corruption points increased by {INCREASE_KNOCKED}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
         savestate(players, filename)
     
-    def detune_fail(self): #3
+    def detune_fail(self, players, filename): #3
         print("Failing to break the curse...")
         time.sleep(1.0)
         self.current_points += INCREASE_FAILURE
@@ -96,7 +100,7 @@ class Character:
         print(f"{self.player_name.capitalize()}'s corruption points increased by {INCREASE_FAILURE}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
         savestate(players, filename)
 
-    def detune_succ(self): #4
+    def detune_succ(self, players, filename): #4
         print("Beating back the curse with willpower...")
         time.sleep(1.0)
         self.current_points += DECREASE_SUCCESS
@@ -104,7 +108,7 @@ class Character:
         print(f"{self.player_name.capitalize()}'s corruption points decreased by {abs(DECREASE_SUCCESS)}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
         savestate(players, filename)
 
-    def recov_magic(self): #5
+    def recov_magic(self, players, filename): #5
         print("Removing a fraction of the curse...")
         time.sleep(1.0)
         self.current_points += DECREASE_RECOVER
@@ -113,7 +117,7 @@ class Character:
         savestate(players, filename)
 
     
-    def edit_shards(self): # 8
+    def edit_shards(self, players, filename): # 8
         while True:
             self.calc_shardlen()
             print(f"Current shard list for {self.player_name.capitalize()}: {self.shard_colors}\n")
@@ -228,7 +232,7 @@ class Character:
                                 print("Bad input (not a number). Please try again.")
                         break             
 
-    def reset_char(self): #11
+    def reset_char(self, players, filename): #11
         while True:
             choice=input(f"Are you sure you want to reset all values for {self.player_name}? y/N: ")
             if choice.lower()=='n' or choice =="":
@@ -284,9 +288,8 @@ def savestate(players, filename):
 
 #======================================================================#
 #Effectively the Main structure
-def menu_framework(players): 
+def menu_framework(players, filename): 
     selected_char = None
-    players = players
     clear_screen()
     
     #Character Selection - Should be at highest scope for menu_framework, since it's only retrieving a character, not acting on one.
@@ -418,7 +421,7 @@ def menu_framework(players):
         if action_num == 0: #"Cast a spell"
             print(action_name)
             if selected_char != None:
-                selected_char.cast_a_spell()
+                selected_char.cast_a_spell(players, filename)
             else:
                 print("No character selected! No changes made.\n")
             return action_num
@@ -426,7 +429,7 @@ def menu_framework(players):
         elif action_num == 1: #Take a Long Rest/Mark a Day as Passed
             print(f"Selected: {action_name}\n")
             if selected_char != None:
-                selected_char.day_passed()
+                selected_char.day_passed(players, filename)
             else:
                 print("No character selected! No changes made.\n")
             return action_num
@@ -434,7 +437,7 @@ def menu_framework(players):
         elif action_num == 2: #Character downed/knocked unconscious
             print(f"Selected: {action_name}\n")
             if selected_char != None:
-                selected_char.char_downed()
+                selected_char.char_downed(players, filename)
             else:
                 print("No character selected! No changes made.\n")
             return action_num
@@ -442,7 +445,7 @@ def menu_framework(players):
         elif action_num == 3: #De-attunement failed
             print(f"Selected: {action_name}\n")
             if selected_char != None:
-                selected_char.detune_fail()
+                selected_char.detune_fail(players, filename)
             else:
                 print("No character selected! No changes made.\n")
             return action_num
@@ -450,7 +453,7 @@ def menu_framework(players):
         elif action_num == 4: #De-attunement successful
             print(f"Selected: {action_name}\n")
             if selected_char != None:
-                selected_char.detune_succ()
+                selected_char.detune_succ(players, filename)
             else:
                 print("No character selected! No changes made.\n")
             return action_num
@@ -458,7 +461,7 @@ def menu_framework(players):
         elif action_num == 5: #Greater Restoration/Remove Curse applied
             print(f"Selected: {action_name}\n")
             if selected_char != None:
-                selected_char.recov_magic()
+                selected_char.recov_magic(players, filename)
             else:
                 print("No character selected! No changes made.\n")
             return action_num
@@ -483,7 +486,7 @@ def menu_framework(players):
         elif action_num == 8: #Edit the shards of the selected player (likely not gonna get much use)
             print(f"Selected: {action_name}\n")
             if selected_char != None:
-                selected_char.edit_shards()
+                selected_char.edit_shards(players, filename)
             else:
                 print("No character selected! No changes made.\n")
             return action_num
@@ -502,7 +505,7 @@ def menu_framework(players):
         elif action_num == 11:
             print(f"Selected: {action_name}\n")
             if selected_char != None:
-                selected_char.reset_char()
+                selected_char.reset_char(players, filename)
             else:
                 print("No character selected! No changes made.\n")
             return action_num
@@ -541,29 +544,7 @@ def menu_framework(players):
             quit_code(players)
 
 
-#Execution - Pre-Main
-#======================================================================#
-filename = "datafile.txt"
-players = loadfile(filename)
-menu_framework(players)
-#======================================================================#
-
-
-#+ + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + #
-
-
-#Debug Options and test Actions
-#======================================================================#
-#print(f"{players['player_name']}\n\n") #DBP, displays created dict
-# #players["Krivskan".lower()].retrieve_stat() #Turn into a method later
-
-#selected_char = character_select(players)
-#print(selected_char)
-#selected_char.show_all()
-
-# selected_char.current_points += 1
-# print(selected_char.current_points)
-
-# #Set as a Write function for every Character override method
-# savestate(players, "file_rw_practice/datafile.txt")
+#Execution 
+if __name__ == "__main__":
+    main()
 #======================================================================#

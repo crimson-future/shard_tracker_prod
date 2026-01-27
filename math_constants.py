@@ -6,8 +6,5 @@ INCREASE_FAILURE=30
 DECREASE_SUCCESS=-15
 DECREASE_RECOVER=-10
 
-
-
-
 if __name__ == "__main__":
     main()
