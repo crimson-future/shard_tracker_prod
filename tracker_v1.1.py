@@ -1,6 +1,7 @@
 import json
 import os
 import time
+from math_constants import INCREASE_CASTING, INCREASE_DAYPASS, INCREASE_KNOCKED, INCREASE_FAILURE, DECREASE_SUCCESS, DECREASE_RECOVER
 
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
@@ -64,57 +65,51 @@ class Character:
     # MENU ACTIONS
     #======================================================================#
     def cast_a_spell(self): #0
-        cast_incr = 2
         print("Casting a spell...")
         time.sleep(1.0)
-        self.current_points += cast_incr
+        self.current_points += INCREASE_CASTING
         self.calc_tier()
-        print(f"{self.player_name.capitalize()}'s corruption points increased by {cast_incr}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
+        print(f"{self.player_name.capitalize()}'s corruption points increased by {INCREASE_CASTING}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
         savestate(players, filename)
 
     def day_passed(self): #1
-        day_incr = 10
         print("Taking a long rest...")
         time.sleep(1.0)
-        self.current_points += day_incr
+        self.current_points += INCREASE_DAYPASS
         self.calc_tier()
-        print(f"{self.player_name.capitalize()}'s corruption points increased by {day_incr}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
+        print(f"{self.player_name.capitalize()}'s corruption points increased by {INCREASE_DAYPASS}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
         savestate(players, filename)
 
     def char_downed(self): #2
-        down_incr = 20
         print("Knocking character out...")
         time.sleep(1.0)
-        self.current_points += down_incr
+        self.current_points += INCREASE_KNOCKED
         self.calc_tier()
-        print(f"{self.player_name.capitalize()}'s corruption points increased by {down_incr}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
+        print(f"{self.player_name.capitalize()}'s corruption points increased by {INCREASE_KNOCKED}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
         savestate(players, filename)
     
     def detune_fail(self): #3
-        fail_incr = 30
         print("Failing to break the curse...")
         time.sleep(1.0)
-        self.current_points += fail_incr
+        self.current_points += INCREASE_FAILURE
         self.calc_tier()
-        print(f"{self.player_name.capitalize()}'s corruption points increased by {fail_incr}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
+        print(f"{self.player_name.capitalize()}'s corruption points increased by {INCREASE_FAILURE}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
         savestate(players, filename)
 
     def detune_succ(self): #4
-        succ_decr = -15
         print("Beating back the curse with willpower...")
         time.sleep(1.0)
-        self.current_points += succ_decr
+        self.current_points += DECREASE_SUCCESS
         self.calc_tier()
-        print(f"{self.player_name.capitalize()}'s corruption points decreased by {abs(succ_decr)}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
+        print(f"{self.player_name.capitalize()}'s corruption points decreased by {abs(DECREASE_SUCCESS)}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
         savestate(players, filename)
 
     def recov_magic(self): #5
-        rec_decr = -10
         print("Removing a fraction of the curse...")
         time.sleep(1.0)
-        self.current_points += rec_decr
+        self.current_points += DECREASE_RECOVER
         self.calc_tier()
-        print(f"{self.player_name.capitalize()}'s corruption points decreased by {abs(rec_decr)}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
+        print(f"{self.player_name.capitalize()}'s corruption points decreased by {abs(DECREASE_RECOVER)}. The new points for the player is {self.current_points}. Their tier is {self.tier_level}.\n")
         savestate(players, filename)
 
     
