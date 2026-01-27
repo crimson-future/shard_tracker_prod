@@ -142,6 +142,11 @@ class Character:
                                 clear_screen()  
                                 print("No further changes made. Returning to menu.")
                                 break
+                            elif color == "":
+                                clear_screen()
+                                print("Error - Can't add 'nothing' as a shard. Please try again.")
+                                time.sleep(1.0)
+                                break
                             else:
                                 color=color.capitalize()
                                 self.shard_colors.append(color)
@@ -158,7 +163,7 @@ class Character:
                             # If there are no shards left, exit
                             if not self.shard_colors:
                                 print("No shards, returning...")
-                                time.sleep(1.0)
+                                time.sleep(1.6)
                                 clear_screen()
                                 print("No shards left to remove.\n")
                                 break
@@ -179,6 +184,7 @@ class Character:
                                 print(f"Removing shard {self.shard_colors[index]} from the list for self...")
                                 time.sleep(1.0)
                                 del self.shard_colors[index]
+                                clear_screen()
                                 savestate(players, filename)
                                 break
                             except ValueError:
@@ -191,7 +197,8 @@ class Character:
                         while True:
                             # If there are no shards left, exit
                             if not self.shard_colors:
-                                time.sleep(1.0)
+                                print("No shards, returning...")
+                                time.sleep(1.6)
                                 clear_screen()
                                 print("No shards to edit.")
                                 break
@@ -206,10 +213,15 @@ class Character:
                                 break
                             try:
                                 index = int(shard_choice) - 1
-                                if index < 0 or index >= len(self.shard_colors):
+                                if index < 0 or index >= len(self.shard_colors) or index=="":
                                     print("That shard number doesn't exist. Please try again.")
                                     continue
-                                selection = input("What would you like to replace this shard value with?\n")
+                                selection = input("What would you like to replace this shard value with? Enter nothing to skip.\n")
+                                if selection == "":
+                                    clear_screen()
+                                    time.sleep(1.0)
+                                    print("Empty input. No changes made.")
+                                    break
                                 print("Replacing shard...")
                                 time.sleep(1.0)
                                 self.shard_colors[index] = selection
@@ -219,13 +231,12 @@ class Character:
                                 break
                             except ValueError:
                                 print("Bad input (not a number). Please try again.")
-                            
                         break             
 
     def reset_char(self): #11
         while True:
-            choice=input(f"Are you sure you want to reset all values for {self.player_name}? y/n: ")
-            if choice.lower()=='n':
+            choice=input(f"Are you sure you want to reset all values for {self.player_name}? y/N: ")
+            if choice.lower()=='n' or choice =="":
                 print("Aborting character stat clear, no changes made.\n")
                 break
             elif choice.lower()=='y':
@@ -282,6 +293,7 @@ def menu_framework(players):
     selected_char = None
     players = players
     clear_screen()
+    
     #Character Selection - Should be at highest scope for menu_framework, since it's only retrieving a character, not acting on one.
     def character_select(players): #Update to select from a predefined list by selecting index numbers
         while True:
@@ -367,7 +379,8 @@ def menu_framework(players):
                 action_sel = int(action_input)
             except ValueError:
                 clear_screen()
-                print("\nBad input: please type a number selection from the list.")
+                print(f"Selected Character: \n{selected_char}\n")
+                print("Bad input: please type a number selection from the list.\n")
                 print_actions()
                 continue
             if 0 <= action_sel < len(actions_list):
@@ -492,6 +505,13 @@ def menu_framework(players):
     
 
 #From here, execute a loop that sets, enters, actions, and exits the menu
+    #Initial Character Select on Boot
+    clear_screen()
+    print("+ + + + + + + + + + + + + + + + + + +\nWelcome to the Shard Tracker!\n+ + + + + + + + + + + + + + + + + + +\n")
+    selected_char=character_select(players)
+    clear_screen()
+
+
     while True: #action_flag != 13:
         print(f"Selected Character: \n{selected_char}\n")
         action = get_action()
