@@ -299,7 +299,7 @@ def menu_framework(players):
         while True:
             selected_char = input("Please input a character name, or type \"exit\" to go back: ").lower()
             if selected_char.lower() == "exit":
-                return None
+                return "__quit"
             if selected_char in players:
                 selected_char = players[selected_char]
                 return selected_char
@@ -311,6 +311,16 @@ def menu_framework(players):
     def show_all(players):  
         for player in players:
             print(f"{players[player]}")    
+
+    #Closeout
+    def quit_code(players):
+        clear_screen()
+        print("+ + + + + + + + + + + + + + + + + + +\nExiting - Current character status:\n+ + + + + + + + + + + + + + + + + + +\n")
+        show_all(players)
+        print("\n+ + + + + + + + + + + + + + + + + + +\nGoodbye!\n+ + + + + + + + + + + + + + + + + + +")
+        input("Press Enter to exit.")
+        clear_screen()
+        quit()
 
     #Contains the objects for the menu options as a list of dicts    
     def print_actions():
@@ -509,6 +519,8 @@ def menu_framework(players):
     clear_screen()
     print("+ + + + + + + + + + + + + + + + + + +\nWelcome to the Shard Tracker!\n+ + + + + + + + + + + + + + + + + + +\n")
     selected_char=character_select(players)
+    if selected_char=="__quit":
+        quit_code(players)
     clear_screen()
 
 
@@ -517,11 +529,7 @@ def menu_framework(players):
         action = get_action()
         result = take_action(action)
         if result == 13:
-            clear_screen()
-            print("+ + + + + + + + + + + + + + + + + + +\nExiting - Current character status:\n+ + + + + + + + + + + + + + + + + + +\n")
-            show_all(players)
-            print("\n+ + + + + + + + + + + + + + + + + + +\nGoodbye!\n+ + + + + + + + + + + + + + + + + + +")
-            break
+            quit_code(players)
 
 
 #Execution - Pre-Main
