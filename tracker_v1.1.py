@@ -312,15 +312,26 @@ def menu_framework(players):
         for player in players:
             print(f"{players[player]}")    
 
-    #Closeout
+    #Closeout code gracefully at user's command
     def quit_code(players):
-        clear_screen()
-        print("+ + + + + + + + + + + + + + + + + + +\nExiting - Current character status:\n+ + + + + + + + + + + + + + + + + + +\n")
-        show_all(players)
-        print("\n+ + + + + + + + + + + + + + + + + + +\nGoodbye!\n+ + + + + + + + + + + + + + + + + + +")
-        input("Press Enter to exit.")
-        clear_screen()
-        quit()
+        while True:
+            choice=input("Are you sure you want to quit? y/N ")
+            if choice.lower()=='n' or choice =="":
+                clear_screen()
+                print("Returning to previous...")
+                break
+            elif choice.lower()=='y':
+                clear_screen()
+                print("+ + + + + + + + + + + + + + + + + + +\nExiting - Current character status:\n+ + + + + + + + + + + + + + + + + + +\n")
+                show_all(players)
+                print("\n+ + + + + + + + + + + + + + + + + + +\nGoodbye!\n+ + + + + + + + + + + + + + + + + + +")
+                input("Press Enter to exit.")
+                clear_screen()
+                quit()
+                break
+            else:
+                print("Bad input. Please try again. ")
+                continue
 
     #Contains the objects for the menu options as a list of dicts    
     def print_actions():
@@ -518,9 +529,12 @@ def menu_framework(players):
     #Initial Character Select on Boot
     clear_screen()
     print("+ + + + + + + + + + + + + + + + + + +\nWelcome to the Shard Tracker!\n+ + + + + + + + + + + + + + + + + + +\n")
-    selected_char=character_select(players)
-    if selected_char=="__quit":
-        quit_code(players)
+    while True:
+        selected_char=character_select(players)
+        if selected_char=="__quit":
+            quit_code(players)
+        else:
+            break
     clear_screen()
 
 
