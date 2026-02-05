@@ -7,7 +7,7 @@ def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
 
 def main():
-    filename = "datafile.txt"
+    filename = "datafile.json"
     players = loadfile(filename)
     menu_framework(players, filename)
 
